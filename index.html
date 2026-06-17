@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vita — App, plataforma y financiamiento de salud</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --jade:#2B2F86; --jade-700:#1E2160; --jade-900:#11142E;
+    --coral:#FF5A4D; --coral-soft:#FFD9D0; --amber:#E8A94F;
+    --ink:#11142E; --muted:#6b6f93;
+    --cream:#FBFBFE; --sand:#EEEFF7; --mint:#E6E8FB; --line:#E3E4F0; --white:#fff;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{font-family:'Manrope',sans-serif;color:var(--ink);background:var(--cream);-webkit-font-smoothing:antialiased;line-height:1.6;overflow-x:hidden}
+  .serif{font-family:'Bricolage Grotesque',sans-serif}
+  .wrap{max-width:1140px;margin:0 auto;padding:0 26px}
+  a{text-decoration:none;color:inherit}
+  .wordmark{font-family:'Bricolage Grotesque',sans-serif;font-weight:600;letter-spacing:-.02em;line-height:1}
+  .wordmark .ac{color:var(--jade)}
+  .btn{display:inline-block;font-weight:700;font-size:15px;padding:13px 24px;border-radius:99px;transition:transform .15s,box-shadow .15s;cursor:pointer;border:none}
+  .btn-j{background:var(--jade);color:#fff;box-shadow:0 12px 28px -10px rgba(43,47,134,.6)}
+  .btn-j:hover{transform:translateY(-2px)}
+  .btn-o{background:transparent;color:var(--ink);border:1.5px solid var(--line)}
+  .btn-o:hover{border-color:var(--jade);color:var(--jade-700)}
+  .btn-c{background:var(--coral);color:#fff;box-shadow:0 12px 28px -10px rgba(255,90,77,.6)}
+  .btn-c:hover{transform:translateY(-2px)}
+
+  nav{position:sticky;top:0;z-index:50;background:rgba(251,250,245,.85);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+  nav .row{display:flex;align-items:center;gap:24px;padding:14px 0}
+  nav .links{display:flex;gap:24px;margin-left:auto;font-size:14px;font-weight:500}
+  nav .links a:hover{color:var(--jade-700)}
+  @media(max-width:980px){nav .links{display:none}}
+
+  /* HERO */
+  .hero{position:relative;padding:70px 0 56px}
+  .hero::before{content:"";position:absolute;inset:0;z-index:-1;
+    background:radial-gradient(900px 520px at 92% 0%,rgba(43,47,134,.13),transparent 60%),
+               radial-gradient(640px 420px at 0% 30%,rgba(255,90,77,.08),transparent 55%)}
+  .hero .grid{display:grid;grid-template-columns:1.08fr .92fr;gap:48px;align-items:center}
+  @media(max-width:880px){.hero .grid{grid-template-columns:1fr;gap:40px}}
+  .eyebrow{display:inline-block;font-size:12.5px;letter-spacing:2px;text-transform:uppercase;color:var(--jade-700);font-weight:700;background:var(--mint);padding:7px 15px;border-radius:99px;margin-bottom:22px}
+  .hero h1{font-family:'Bricolage Grotesque',sans-serif;font-size:clamp(36px,5.4vw,58px);font-weight:600;line-height:1.05;letter-spacing:-.02em}
+  .hero h1 em{font-style:italic;color:var(--jade)}
+  .hero .lead{font-size:18px;color:var(--muted);margin:22px 0 30px;max-width:500px}
+  .hero .cta{display:flex;gap:14px;flex-wrap:wrap}
+  .hero .micro{margin-top:22px;font-size:13.5px;color:var(--muted)}
+  .hero .micro b{color:var(--jade-700)}
+  .visual{position:relative;height:430px}
+  .credit{width:330px;padding:24px;color:#eef0ff;border-radius:22px;
+    background:linear-gradient(135deg,#2B2F86,#1E2160 70%,#11142E);box-shadow:0 30px 60px -24px rgba(10,68,52,.6);
+    top:20px;left:20px;position:absolute;overflow:hidden}
+  .credit::after{content:"";position:absolute;right:-40px;top:-50px;width:170px;height:170px;border-radius:50%;background:rgba(255,255,255,.08)}
+  .credit .top{display:flex;justify-content:space-between;align-items:center;margin-bottom:50px}
+  .credit .chip{width:38px;height:28px;border-radius:6px;background:linear-gradient(135deg,#ffd98a,#e8a94f)}
+  .credit .lab{font-size:10px;letter-spacing:2px;text-transform:uppercase;opacity:.85}
+  .credit .nm{font-family:'Bricolage Grotesque',sans-serif;font-size:20px;margin-top:3px}
+  .approve{background:#fff;border:1px solid var(--line);border-radius:22px;width:250px;padding:20px;bottom:10px;right:0;position:absolute;box-shadow:0 30px 60px -30px rgba(17,20,46,.4)}
+  .approve .ok{width:42px;height:42px;border-radius:50%;background:var(--mint);display:flex;align-items:center;justify-content:center;margin-bottom:12px}
+  .approve .amt{font-family:'Bricolage Grotesque',sans-serif;font-size:25px;font-weight:600}
+  .approve .sub{color:var(--muted);font-size:13px}.approve .sub b{color:var(--ink)}
+  @media(max-width:880px){.visual{height:360px;max-width:420px;margin:0 auto}}
+
+  .stats{background:var(--ink);color:#eef0ff}
+  .stats .g{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;padding:30px 0}
+  .stats .n{font-family:'Bricolage Grotesque',sans-serif;font-size:24px;font-weight:600;color:#fff}
+  .stats .l{font-size:13px;color:#a9adcf;margin-top:2px}
+  @media(max-width:680px){.stats .g{grid-template-columns:1fr 1fr;gap:24px}}
+
+  section{padding:62px 0}
+  [id]{scroll-margin-top:76px}
+  .shead{max-width:680px;margin-bottom:36px}
+  .shead .n{font-family:'Bricolage Grotesque',sans-serif;font-size:15px;color:var(--jade);font-weight:600}
+  .shead h2{font-family:'Bricolage Grotesque',sans-serif;font-size:clamp(28px,4vw,40px);font-weight:600;letter-spacing:-.02em;line-height:1.1;margin-top:4px}
+  .shead p{color:var(--muted);font-size:16px;margin-top:12px}
+  .center{margin-left:auto;margin-right:auto;text-align:center}
+
+  .grid{display:grid;gap:22px}
+  .g2{grid-template-columns:1fr 1fr}.g4{grid-template-columns:repeat(4,1fr)}
+  @media(max-width:880px){.g4{grid-template-columns:1fr 1fr}}
+  @media(max-width:600px){.g2,.g4{grid-template-columns:1fr}}
+  .card{background:#fff;border:1px solid var(--line);border-radius:22px;padding:24px;transition:transform .18s,box-shadow .18s}
+  .card:hover{transform:translateY(-4px);box-shadow:0 20px 44px -26px rgba(17,20,46,.32)}
+  .card h3{font-size:17px;font-weight:700;margin-bottom:7px}
+  .card p{color:var(--muted);font-size:14.5px}
+
+  .tabs{display:inline-flex;background:var(--sand);border-radius:99px;padding:5px;margin-bottom:32px}
+  .tabs button{border:none;background:none;font-family:inherit;font-size:14.5px;font-weight:600;color:var(--muted);padding:9px 22px;border-radius:99px;cursor:pointer;transition:.15s}
+  .tabs button.on{background:#fff;color:var(--jade-700);box-shadow:0 4px 12px -6px rgba(17,20,46,.3)}
+  .pane{display:none}.pane.on{display:block}
+  .vlist{list-style:none}
+  .vlist li{display:flex;gap:14px;align-items:flex-start;padding:13px 0;border-bottom:1px solid var(--line)}
+  .vlist li:last-child{border:none}
+  .vlist .ck{flex:0 0 26px;width:26px;height:26px;border-radius:50%;background:var(--mint);display:flex;align-items:center;justify-content:center;margin-top:2px}
+  .vlist b{font-size:16px}.vlist span small{display:block;color:var(--muted);font-size:14px;font-weight:400}
+
+  .step .num{font-family:'Bricolage Grotesque',sans-serif;font-size:38px;font-weight:600;color:var(--jade)}
+  .step h3{margin-top:6px}
+
+  /* ===== APP MOCKUPS ===== */
+  .appsec{background:var(--sand)}
+  .devs{display:flex;gap:24px;justify-content:center;flex-wrap:wrap}
+  .device{width:236px;border-radius:38px;background:#11142E;padding:9px;box-shadow:0 36px 70px -30px rgba(17,20,46,.5);flex:0 0 auto}
+  .screen{background:var(--cream);border-radius:30px;overflow:hidden;height:486px;position:relative;display:flex;flex-direction:column}
+  .notch{position:absolute;top:0;left:50%;transform:translateX(-50%);width:84px;height:18px;background:#11142E;border-radius:0 0 13px 13px;z-index:5}
+  .app-hd{padding:26px 18px 10px;display:flex;align-items:center;justify-content:space-between}
+  .app-hd .wordmark{font-size:20px}
+  .app-hd .av{width:26px;height:26px;border-radius:50%;background:var(--mint);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--jade-700)}
+  .app-bd{padding:6px 18px 18px;flex:1;overflow:hidden}
+  .app-bd .q{font-family:'Bricolage Grotesque',sans-serif;font-size:18px;font-weight:600;margin:8px 0 14px}
+  .selrow{display:flex;gap:8px;margin-bottom:14px}
+  .selrow .opt{flex:1;text-align:center;padding:9px 0;border-radius:11px;background:#fff;border:1.5px solid var(--line);font-weight:700;font-size:14px;color:var(--muted)}
+  .selrow .opt.on{border-color:var(--jade);background:var(--mint);color:var(--jade-700)}
+  .procpill{background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px 14px;display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+  .procpill b{font-size:14px}.procpill .p{font-family:'Bricolage Grotesque',sans-serif;color:var(--jade-700);font-weight:600}
+  .cuotabox{background:var(--ink);color:#eef0ff;border-radius:16px;padding:16px;text-align:center;margin-bottom:14px}
+  .cuotabox .s{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#a9adcf}
+  .cuotabox .b{font-family:'Bricolage Grotesque',sans-serif;font-size:30px;font-weight:600;color:#fff}
+  .appbtn{background:var(--jade);color:#fff;text-align:center;padding:13px;border-radius:13px;font-weight:700;font-size:15px}
+  .appbtn.soft{background:var(--mint);color:var(--jade-700)}
+  .okwrap{text-align:center;padding-top:22px}
+  .okwrap .big{width:64px;height:64px;border-radius:50%;background:var(--mint);display:flex;align-items:center;justify-content:center;margin:0 auto 14px}
+  .okwrap h4{font-family:'Bricolage Grotesque',sans-serif;font-size:24px;font-weight:600}
+  .okwrap .sub{color:var(--muted);font-size:14px;margin-top:2px}
+  .minirow{display:flex;justify-content:space-between;font-size:13.5px;padding:9px 0;border-bottom:1px dashed var(--line)}
+  .minirow:last-of-type{border:none}.minirow b{font-weight:700}
+  .ring{width:96px;height:96px;border-radius:50%;margin:6px auto 14px;background:conic-gradient(var(--jade) 0 33%, var(--sand) 33% 100%);display:flex;align-items:center;justify-content:center}
+  .ring .in{width:74px;height:74px;border-radius:50%;background:var(--cream);display:flex;flex-direction:column;align-items:center;justify-content:center}
+  .ring .in b{font-family:'Bricolage Grotesque',sans-serif;font-size:20px}.ring .in span{font-size:10px;color:var(--muted)}
+  .next{background:var(--jade);color:#fff;border-radius:14px;padding:13px 15px;display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+  .next .s{font-size:11px;opacity:.85}.next .b{font-family:'Bricolage Grotesque',sans-serif;font-size:19px;font-weight:600}
+  .qrow{display:flex;justify-content:space-between;align-items:center;font-size:13.5px;padding:9px 0;border-bottom:1px solid var(--line)}
+  .qrow:last-child{border:none}
+  .badge{font-size:10.5px;font-weight:700;padding:3px 9px;border-radius:99px}
+  .b-ok{background:var(--mint);color:var(--jade-700)}.b-wait{background:#FCF1DD;color:#9a6a12}.b-due{background:var(--coral-soft);color:#b3402c}
+  .credm{border-radius:16px;padding:16px;color:#eef0ff;background:linear-gradient(135deg,#2B2F86,#1E2160);margin-bottom:14px}
+  .credm .t{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px}
+  .credm .lab{font-size:9px;letter-spacing:1.5px;text-transform:uppercase;opacity:.85}
+  .credm .nm{font-family:'Bricolage Grotesque',sans-serif;font-size:15px}
+  .lvl{background:#fff;border:1px solid var(--line);border-radius:14px;padding:13px;margin-bottom:12px}
+  .lvl .h{display:flex;justify-content:space-between;font-size:13px;font-weight:700;margin-bottom:8px}
+  .lvl .bar{height:7px;background:var(--sand);border-radius:5px;overflow:hidden}
+  .lvl .bar i{display:block;height:100%;width:62%;background:var(--coral);border-radius:5px}
+  .lvl .s{font-size:11.5px;color:var(--muted);margin-top:7px}
+  .applabel{text-align:center;font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:1.5px;margin-top:14px}
+
+  /* ===== AFFILIATION ===== */
+  .affil{background:linear-gradient(135deg,#1E2160,#11142E);color:#eef0ff;border-radius:30px;padding:52px;position:relative;overflow:hidden}
+  .affil::after{content:"";position:absolute;right:-80px;top:-80px;width:300px;height:300px;border-radius:50%;background:rgba(255,255,255,.05)}
+  .affil h2{font-family:'Bricolage Grotesque',sans-serif;font-size:32px;font-weight:600}
+  .affil .lead{color:#bfe7da;font-size:16px;margin:14px 0 28px;max-width:560px}
+  .affil .steps4{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-bottom:30px}
+  @media(max-width:780px){.affil{padding:32px}.affil .steps4{grid-template-columns:1fr 1fr}}
+  .affil .s{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:16px;padding:18px}
+  .affil .s .num{font-family:'Bricolage Grotesque',sans-serif;font-size:22px;color:#7df0c9;font-weight:600}
+  .affil .s b{display:block;margin:6px 0 4px;font-size:15px}.affil .s p{font-size:13px;color:#aedccd}
+
+  /* ===== BACKOFFICE ===== */
+  .browser{border-radius:18px;border:1px solid var(--line);overflow:hidden;box-shadow:0 30px 70px -34px rgba(17,20,46,.5);background:#fff}
+  .bbar{background:var(--sand);padding:11px 16px;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--line)}
+  .bbar .d{width:11px;height:11px;border-radius:50%}.bbar .d.r{background:#ff6159}.bbar .d.y{background:#ffbd2e}.bbar .d.g{background:#28c840}
+  .bbar .url{margin-left:14px;background:#fff;border:1px solid var(--line);border-radius:8px;padding:5px 14px;font-size:12px;color:var(--muted);flex:1;max-width:340px}
+  .bdash{display:grid;grid-template-columns:188px 1fr;min-height:520px}
+  @media(max-width:760px){.bdash{grid-template-columns:1fr}.bside{display:none}}
+  .bside{background:#0a3328;color:#cfeee2;padding:18px 14px}
+  .bside .lg{font-family:'Bricolage Grotesque',sans-serif;font-size:20px;color:#fff;font-weight:600;padding:4px 8px 16px}
+  .bside .lg .ac{color:#5fd3b6}
+  .bnav{list-style:none}
+  .bnav li{padding:10px 12px;border-radius:10px;font-size:13.5px;font-weight:500;margin-bottom:3px;color:#a9adcf;display:flex;gap:9px;align-items:center}
+  .bnav li.on{background:rgba(255,255,255,.1);color:#fff}
+  .bnav .dt{width:6px;height:6px;border-radius:2px;background:#5fd3b6;transform:rotate(45deg)}
+  .bmain{padding:24px;background:var(--cream)}
+  .btop{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:12px}
+  .btop h3{font-family:'Bricolage Grotesque',sans-serif;font-size:22px;font-weight:600}
+  .dtabs{display:inline-flex;background:#fff;border:1px solid var(--line);border-radius:99px;padding:4px}
+  .dtabs button{border:none;background:none;font-family:inherit;font-size:13px;font-weight:600;color:var(--muted);padding:7px 16px;border-radius:99px;cursor:pointer}
+  .dtabs button.on{background:var(--jade);color:#fff}
+  .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px}
+  @media(max-width:620px){.kpis{grid-template-columns:1fr 1fr}}
+  .kpi{background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px}
+  .kpi .l{font-size:11.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+  .kpi .v{font-family:'Bricolage Grotesque',sans-serif;font-size:26px;font-weight:600;margin-top:4px}
+  .kpi .v small{font-size:13px;color:var(--jade-700);font-weight:600;font-family:'Manrope'}
+  .panel2{display:grid;grid-template-columns:1.3fr 1fr;gap:16px}
+  @media(max-width:760px){.panel2{grid-template-columns:1fr}}
+  .panelcard{background:#fff;border:1px solid var(--line);border-radius:16px;padding:18px}
+  .panelcard .ttl{font-size:13px;font-weight:700;margin-bottom:14px;display:flex;justify-content:space-between;color:var(--ink)}
+  .panelcard .ttl span{font-size:12px;color:var(--muted);font-weight:500}
+  table{width:100%;border-collapse:collapse;font-size:12.5px}
+  th{text-align:left;color:var(--muted);font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.4px;padding:0 6px 9px}
+  td{padding:9px 6px;border-top:1px solid var(--line)}
+  td.r,th.r{text-align:right;font-variant-numeric:tabular-nums}
+  .chart{display:flex;align-items:flex-end;gap:10px;height:150px;padding-top:8px}
+  .chart .col{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px}
+  .chart .bar{width:100%;border-radius:7px 7px 0 0;background:var(--jade)}
+  .chart .bar.alt{background:var(--coral)}
+  .chart .mo{font-size:10.5px;color:var(--muted)}
+  .legend{display:flex;gap:16px;font-size:11.5px;color:var(--muted);margin-top:6px}
+  .legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:middle}
+
+  /* RATES / PROC / SECTOR (compact) */
+  .rate{background:#fff;border:1px solid var(--line);border-radius:24px;padding:30px}
+  .rate.feat{border:2px solid var(--jade);box-shadow:0 24px 50px -28px rgba(43,47,134,.5)}
+  .rate .for{font-size:12.5px;letter-spacing:1.5px;text-transform:uppercase;color:var(--jade-700);font-weight:700}
+  .rate .big{font-family:'Bricolage Grotesque',sans-serif;font-size:44px;font-weight:600;line-height:1;margin:14px 0 4px}
+  .rate .big small{font-size:18px;color:var(--muted);font-weight:500;font-family:'Manrope'}
+  .rate ul{list-style:none;margin-top:18px}.rate li{display:flex;gap:10px;padding:9px 0;font-size:14.5px;border-bottom:1px dashed var(--line)}.rate li:last-child{border:none}.rate li .d{color:var(--jade);font-weight:700}
+  .example{background:var(--mint);border-radius:16px;padding:16px;margin-top:18px}
+  .example .t{font-size:12px;text-transform:uppercase;letter-spacing:1px;color:var(--jade-700);font-weight:700;margin-bottom:8px}
+  .example .calc{display:flex;justify-content:space-between;font-size:14px;padding:4px 0}
+  .example .tot{border-top:1px solid rgba(30,33,96,.25);margin-top:6px;padding-top:8px;font-weight:700;color:var(--jade-900)}
+  .proc{display:flex;align-items:center;gap:14px;background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px 18px;transition:.18s}
+  .proc:hover{border-color:var(--jade);transform:translateX(4px)}
+  .proc .ic{flex:0 0 38px;width:38px;height:38px;border-radius:11px;background:var(--mint);display:flex;align-items:center;justify-content:center}
+  .proc .ic svg{width:20px;height:20px}
+  .proc .nm{font-weight:700;font-size:15px}.proc .rg{color:var(--muted);font-size:13px}
+  .proc .pr{margin-left:auto;font-family:'Bricolage Grotesque',sans-serif;font-weight:600;color:var(--jade-700);font-size:15.5px;white-space:nowrap}
+  .tagdot{display:inline-block;font-size:10.5px;background:var(--coral-soft);color:#b3402c;padding:2px 9px;border-radius:99px;font-weight:600;margin-left:6px}
+  .sectorcard{background:#fff;border:1px solid var(--line);border-radius:22px;padding:26px}
+  .sectorcard .h{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+  .sectorcard .h .ic{width:42px;height:42px;border-radius:12px;background:var(--mint);display:flex;align-items:center;justify-content:center}
+  .sectorcard h3{font-family:'Bricolage Grotesque',sans-serif;font-size:20px;font-weight:600}
+  .sectorcard ul{list-style:none;margin-top:6px}.sectorcard li{padding:8px 0;font-size:14px;border-bottom:1px solid var(--line);color:var(--muted)}.sectorcard li:last-child{border:none}.sectorcard li b{color:var(--ink)}
+  .geoband{background:var(--sand);border-radius:18px;padding:18px 22px;margin-top:20px;display:flex;align-items:center;gap:14px;font-size:15px}.geoband b{color:var(--jade-700)}
+  .final{text-align:center;background:var(--mint);border-radius:30px;padding:56px 30px}
+  .final h2{font-family:'Bricolage Grotesque',sans-serif;font-size:clamp(28px,4.2vw,42px);font-weight:600}
+  .final p{color:var(--muted);font-size:17px;margin:14px auto 26px;max-width:480px}
+  footer{padding:44px 0 60px;border-top:1px solid var(--line);margin-top:24px}
+  footer .row{display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap}
+  footer .dis{font-size:12px;color:var(--muted);max-width:580px;margin-top:18px;line-height:1.5}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap row">
+    <a href="#top" class="wordmark" style="font-size:28px">vita<span class="ac" style="color:var(--coral)">.</span></a>
+    <div class="links">
+      <a href="#ventajas">Ventajas</a>
+      <a href="#app">La app</a>
+      <a href="#afiliacion">Clínicas</a>
+      <a href="#panel">Backoffice</a>
+      <a href="#tasas">Tasas</a>
+      <a href="#procedimientos">Procedimientos</a>
+    </div>
+    <a href="#afiliacion" class="btn btn-j" style="padding:10px 20px;font-size:14px">Afilia tu clínica</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero" id="top">
+  <div class="wrap grid">
+    <div>
+      <span class="eyebrow">Vive hoy · paga con calma</span>
+      <h1>El tratamiento que necesitas, en <em>cuotas que sí puedes</em>.</h1>
+      <p class="lead">Vita financia procedimientos médicos a través de una red de clínicas aliadas. La clínica cobra por adelantado; tú pagas en cuotas claras, sin seguro y sin esperar.</p>
+      <div class="cta">
+        <a href="#afiliacion" class="btn btn-j">Afilia tu clínica</a>
+        <a href="#app" class="btn btn-o">Ver la app</a>
+      </div>
+      <div class="micro">Aprobación el mismo día · Hasta 6 cuotas · <b>Sin costo de afiliación para la clínica</b></div>
+    </div>
+    <div class="visual">
+      <div class="credit">
+        <div class="top"><span class="wordmark" style="color:#fff;font-size:22px">vita<span style="color:#FFD9D0" style="color:var(--coral)">.</span></span><div class="chip"></div></div>
+        <div class="lab">Crédito de salud</div><div class="nm">Tu nombre</div>
+      </div>
+      <div class="approve">
+        <div class="ok"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#2B2F86" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="amt">¡Aprobado!</div><div class="sub">$1.500 en 6 cuotas de <b>$165</b></div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="stats">
+  <div class="wrap"><div class="g">
+    <div><div class="n">Mismo día</div><div class="l">Aprobación en la cita</div></div>
+    <div><div class="n">Por adelantado</div><div class="l">La clínica cobra completo</div></div>
+    <div><div class="n">3 a 6</div><div class="l">Cuotas, indexadas a USD</div></div>
+    <div><div class="n">Desde 30%</div><div class="l">De inicial, según perfil</div></div>
+  </div></div>
+</div>
+
+<!-- VENTAJAS -->
+<section id="ventajas">
+  <div class="wrap">
+    <div class="shead center"><div class="n">01</div><h2>Una sola plataforma, dos beneficios</h2><p>Vita financia el episodio médico completo y le da a la clínica un riel de cobro que antes no tenía.</p></div>
+    <div class="center"><div class="tabs"><button class="on" onclick="tab('pac',event)">Para el paciente</button><button onclick="tab('cli',event)">Para la clínica</button></div></div>
+    <div id="pac" class="pane on"><div class="grid g2">
+      <ul class="vlist">
+        <li><span class="ck"><svg width="13" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#2B2F86" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span><b>No esperas a juntar el dinero</b><small>Tratas ahora; pagas en cuotas mensuales.</small></span></li>
+        <li><span class="ck"><svg width="13" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#2B2F86" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span><b>Sin seguro y sin papeleo eterno</b><small>Evaluación sencilla en tu pre-operatorio.</small></span></li>
+        <li><span class="ck"><svg width="13" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#2B2F86" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span><b>Cuotas claras, sin letra chica</b><small>Conoces inicial y cuota antes de firmar.</small></span></li>
+      </ul>
+      <ul class="vlist">
+        <li><span class="ck"><svg width="13" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#2B2F86" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span><b>El episodio completo</b><small>Exámenes, honorarios, pabellón y post-op.</small></span></li>
+        <li><span class="ck"><svg width="13" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#2B2F86" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span><b>Construyes historial</b><small>Paga bien y baja tu inicial.</small></span></li>
+        <li><span class="ck"><svg width="13" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#2B2F86" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span><b>En tu clínica de confianza</b><small>Lo solicitas en recepción, no en un banco.</small></span></li>
+      </ul>
+    </div></div>
+    <div id="cli" class="pane"><div class="grid g2">
+      <ul class="vlist">
+        <li><span class="ck"><svg width="13" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#2B2F86" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span><b>Cierras presupuestos que hoy se caen</b><small>El que no podía pagar de golpe, ahora opera.</small></span></li>
+        <li><span class="ck"><svg width="13" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#2B2F86" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span><b>Cobras por adelantado y completo</b><small>No cargas el riesgo de crédito.</small></span></li>
+        <li><span class="ck"><svg width="13" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#2B2F86" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span><b>Llenas pabellón ocioso</b><small>Más cirugías programadas.</small></span></li>
+      </ul>
+      <ul class="vlist">
+        <li><span class="ck"><svg width="13" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#2B2F86" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span><b>Panel para originar y conciliar</b><small>Solicitudes, seguimiento y pagos en un lugar.</small></span></li>
+        <li><span class="ck"><svg width="13" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#2B2F86" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span><b>Marca blanca opcional</b><small>“Financia con tu clínica”, por Vita.</small></span></li>
+        <li><span class="ck"><svg width="13" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#2B2F86" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span><b>Sin mensualidad ni setup</b><small>Solo un descuento por transacción.</small></span></li>
+      </ul>
+    </div></div>
+  </div>
+</section>
+
+<!-- APP -->
+<section id="app" class="appsec">
+  <div class="wrap">
+    <div class="shead"><div class="n">02</div><h2>La app del paciente</h2><p>Solicitar, ver el plan, pagar y graduar de nivel — todo desde el teléfono. Diseñada para ser tan simple como pedir comida.</p></div>
+    <div class="devs">
+      <!-- 1 Solicitar -->
+      <div>
+        <div class="device"><div class="screen"><div class="notch"></div>
+          <div class="app-hd"><span class="wordmark">vita<span class="ac" style="color:var(--coral)">.</span></span><span class="av">G</span></div>
+          <div class="app-bd">
+            <div class="q">¿Qué vas a tratar?</div>
+            <div class="procpill"><b>Implante dental</b><span class="p">$1.500</span></div>
+            <div style="font-size:12px;color:var(--muted);margin-bottom:8px">Plazo</div>
+            <div class="selrow"><div class="opt">3</div><div class="opt">4</div><div class="opt">5</div><div class="opt on">6</div></div>
+            <div class="cuotabox"><div class="s">Tu cuota mensual</div><div class="b">$165</div></div>
+            <div style="font-size:12.5px;color:var(--muted);text-align:center;margin-bottom:12px">Inicial 40% · $600</div>
+            <div class="appbtn">Solicitar</div>
+          </div>
+        </div></div>
+        <div class="applabel">Solicitar</div>
+      </div>
+      <!-- 2 Aprobado -->
+      <div>
+        <div class="device"><div class="screen"><div class="notch"></div>
+          <div class="app-hd"><span class="wordmark">vita<span class="ac" style="color:var(--coral)">.</span></span><span class="av">G</span></div>
+          <div class="app-bd">
+            <div class="okwrap">
+              <div class="big"><svg width="30" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#2B2F86" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+              <h4>¡Aprobado!</h4><div class="sub">$1.500 financiados</div>
+            </div>
+            <div style="margin-top:20px">
+              <div class="minirow"><span>Inicial (40%)</span><b>$600</b></div>
+              <div class="minirow"><span>A financiar</span><b>$900</b></div>
+              <div class="minirow"><span>Plazo</span><b>6 meses</b></div>
+              <div class="minirow"><span>Cuota mensual</span><b style="color:var(--jade-700)">$165</b></div>
+            </div>
+            <div class="appbtn" style="margin-top:18px">Confirmar y agendar</div>
+            <div class="appbtn soft" style="margin-top:10px">Ver contrato</div>
+          </div>
+        </div></div>
+        <div class="applabel">Aprobación</div>
+      </div>
+      <!-- 3 Cuotas -->
+      <div>
+        <div class="device"><div class="screen"><div class="notch"></div>
+          <div class="app-hd"><span class="wordmark">vita<span class="ac" style="color:var(--coral)">.</span></span><span class="av">G</span></div>
+          <div class="app-bd">
+            <div class="q" style="margin-bottom:6px">Tu plan</div>
+            <div class="ring"><div class="in"><b>2/6</b><span>pagadas</span></div></div>
+            <div class="next"><div><div class="s">Próxima cuota · 5 jun</div><div class="b">$165</div></div><div class="appbtn soft" style="padding:8px 14px;font-size:13px">Pagar</div></div>
+            <div class="qrow"><span>Cuota 1 · abr</span><span class="badge b-ok">Pagada</span></div>
+            <div class="qrow"><span>Cuota 2 · may</span><span class="badge b-ok">Pagada</span></div>
+            <div class="qrow"><span>Cuota 3 · jun</span><span class="badge b-due">Por pagar</span></div>
+            <div class="qrow"><span>Cuota 4 · jul</span><span class="badge b-wait">Próxima</span></div>
+            <div class="qrow"><span>Cuota 5 · ago</span><span class="badge b-wait">Próxima</span></div>
+          </div>
+        </div></div>
+        <div class="applabel">Mis cuotas</div>
+      </div>
+      <!-- 4 Credencial / nivel -->
+      <div>
+        <div class="device"><div class="screen"><div class="notch"></div>
+          <div class="app-hd"><span class="wordmark">vita<span class="ac" style="color:var(--coral)">.</span></span><span class="av">G</span></div>
+          <div class="app-bd">
+            <div class="q" style="margin-bottom:10px">Mi Vita</div>
+            <div class="credm"><div class="t"><span class="wordmark" style="color:#fff;font-size:15px">vita<span style="color:#FFD9D0" style="color:var(--coral)">.</span></span><div class="chip" style="width:30px;height:22px;border-radius:5px;background:linear-gradient(135deg,#ffd98a,#e8a94f)"></div></div><div class="lab">Crédito de salud</div><div class="nm">Guillermo R.</div></div>
+            <div class="lvl"><div class="h"><span>Nivel 2 · Buen pagador</span><span style="color:var(--jade-700)">62%</span></div><div class="bar"><i></i></div><div class="s">Te faltan 2 pagos para Nivel 3 y bajar tu inicial a 30%.</div></div>
+            <div class="qrow"><span>Tu inicial actual</span><b>35%</b></div>
+            <div class="qrow"><span>Tratamientos</span><b>2</b></div>
+            <div class="qrow"><span>Pagos a tiempo</span><b style="color:var(--jade-700)">100%</b></div>
+          </div>
+        </div></div>
+        <div class="applabel">Credencial &amp; nivel</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- AFILIACION -->
+<section id="afiliacion">
+  <div class="wrap"><div class="affil">
+    <div class="serif" style="color:#7df0c9;font-size:15px;font-weight:600">03</div>
+    <h2>Sistema de afiliación de clínicas</h2>
+    <p class="lead">Conviértete en clínica aliada y ofrece financiamiento en el punto de atención. Onboarding rápido, sin costo de entrada, y cobras garantizado por adelantado.</p>
+    <div class="steps4">
+      <div class="s"><div class="num">01</div><b>Solicitas afiliación</b><p>Formulario corto y validación de tu centro.</p></div>
+      <div class="s"><div class="num">02</div><b>Integramos tu catálogo</b><p>Cargamos procedimientos y acordamos el descuento.</p></div>
+      <div class="s"><div class="num">03</div><b>Ofreces Vita</b><p>Recepción y pre-op activan el financiamiento.</p></div>
+      <div class="s"><div class="num">04</div><b>Cobras y operas</b><p>Pagamos por adelantado; cobramos al paciente.</p></div>
+    </div>
+    <a href="#final" class="btn btn-c">Quiero afiliar mi clínica</a>
+  </div></div>
+</section>
+
+<!-- BACKOFFICE -->
+<section id="panel" class="appsec">
+  <div class="wrap">
+    <div class="shead"><div class="n">04</div><h2>Backoffice &amp; panel</h2><p>El cerebro de la operación. La clínica origina y concilia; el equipo Vita gestiona riesgo y cartera. Cambia la vista para verlo.</p></div>
+    <div class="browser">
+      <div class="bbar"><span class="d r"></span><span class="d y"></span><span class="d g"></span><span class="url">panel.sane.com</span></div>
+      <div class="bdash">
+        <div class="bside">
+          <div class="lg">vita<span class="ac" style="color:var(--coral)">.</span></div>
+          <ul class="bnav">
+            <li class="on"><span class="dt"></span>Resumen</li>
+            <li><span class="dt" style="background:#3c6b5c"></span>Solicitudes</li>
+            <li><span class="dt" style="background:#3c6b5c"></span>Pacientes</li>
+            <li><span class="dt" style="background:#3c6b5c"></span>Pagos</li>
+            <li><span class="dt" style="background:#3c6b5c"></span>Conciliación</li>
+            <li><span class="dt" style="background:#3c6b5c"></span>Cartera</li>
+            <li><span class="dt" style="background:#3c6b5c"></span>Configuración</li>
+          </ul>
+        </div>
+        <div class="bmain">
+          <div class="btop">
+            <h3 id="dashTitle">Clínica Santa Rosa</h3>
+            <div class="dtabs"><button class="on" onclick="dashTab('cl',event)">Panel de clínica</button><button onclick="dashTab('op',event)">Back-office operación</button></div>
+          </div>
+
+          <!-- CLINIC VIEW -->
+          <div id="cl" class="dpane">
+            <div class="kpis">
+              <div class="kpi"><div class="l">Solicitudes (mes)</div><div class="v">24</div></div>
+              <div class="kpi"><div class="l">Aprobadas</div><div class="v">18 <small>75%</small></div></div>
+              <div class="kpi"><div class="l">GMV originado</div><div class="v">$28,4K</div></div>
+              <div class="kpi"><div class="l">Por conciliar</div><div class="v">$3,2K</div></div>
+            </div>
+            <div class="panel2">
+              <div class="panelcard">
+                <div class="ttl">Solicitudes recientes <span>Ver todas</span></div>
+                <table>
+                  <tr><th>Paciente</th><th>Procedimiento</th><th class="r">Monto</th><th>Estado</th></tr>
+                  <tr><td>M. Pérez</td><td>Implante</td><td class="r">$1.500</td><td><span class="badge b-ok">Aprobado</span></td></tr>
+                  <tr><td>J. Rivas</td><td>Vesícula</td><td class="r">$1.200</td><td><span class="badge b-ok">Aprobado</span></td></tr>
+                  <tr><td>A. León</td><td>Cataratas</td><td class="r">$1.800</td><td><span class="badge b-wait">En revisión</span></td></tr>
+                  <tr><td>C. Mora</td><td>Ortodoncia</td><td class="r">$900</td><td><span class="badge b-ok">Pagado</span></td></tr>
+                  <tr><td>R. Díaz</td><td>Artroscopia</td><td class="r">$2.400</td><td><span class="badge b-due">Inicial pend.</span></td></tr>
+                </table>
+              </div>
+              <div class="panelcard">
+                <div class="ttl">Originación (6 meses)</div>
+                <div class="chart">
+                  <div class="col"><div class="bar" style="height:42%"></div><div class="mo">Ene</div></div>
+                  <div class="col"><div class="bar" style="height:55%"></div><div class="mo">Feb</div></div>
+                  <div class="col"><div class="bar" style="height:48%"></div><div class="mo">Mar</div></div>
+                  <div class="col"><div class="bar" style="height:70%"></div><div class="mo">Abr</div></div>
+                  <div class="col"><div class="bar" style="height:82%"></div><div class="mo">May</div></div>
+                  <div class="col"><div class="bar" style="height:100%"></div><div class="mo">Jun</div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- OPERATION VIEW -->
+          <div id="op" class="dpane" style="display:none">
+            <div class="kpis">
+              <div class="kpi"><div class="l">Cartera viva</div><div class="v">$142K</div></div>
+              <div class="kpi"><div class="l">Mora 30d</div><div class="v">4,2% <small>&#9660;</small></div></div>
+              <div class="kpi"><div class="l">GMV originado (mes)</div><div class="v">$410K</div></div>
+              <div class="kpi"><div class="l">Vendido a fondo</div><div class="v">$320K</div></div>
+            </div>
+            <div class="panel2">
+              <div class="panelcard">
+                <div class="ttl">Desempeño por cohorte</div>
+                <table>
+                  <tr><th>Cohorte</th><th class="r">Originado</th><th class="r">Mora</th><th>Estado</th></tr>
+                  <tr><td>Feb 2026</td><td class="r">$58K</td><td class="r">3,1%</td><td><span class="badge b-ok">Vendida</span></td></tr>
+                  <tr><td>Mar 2026</td><td class="r">$71K</td><td class="r">3,8%</td><td><span class="badge b-ok">Vendida</span></td></tr>
+                  <tr><td>Abr 2026</td><td class="r">$96K</td><td class="r">4,0%</td><td><span class="badge b-ok">Vendida</span></td></tr>
+                  <tr><td>May 2026</td><td class="r">$118K</td><td class="r">4,5%</td><td><span class="badge b-wait">En warehouse</span></td></tr>
+                  <tr><td>Jun 2026</td><td class="r">$142K</td><td class="r">—</td><td><span class="badge b-due">Originando</span></td></tr>
+                </table>
+              </div>
+              <div class="panelcard">
+                <div class="ttl">Originado vs. vendido (factoring)</div>
+                <div class="chart">
+                  <div class="col"><div class="bar" style="height:40%"></div><div class="mo">Feb</div></div>
+                  <div class="col"><div class="bar" style="height:50%"></div><div class="mo">Mar</div></div>
+                  <div class="col"><div class="bar" style="height:66%"></div><div class="mo">Abr</div></div>
+                  <div class="col"><div class="bar" style="height:82%"></div><div class="mo">May</div></div>
+                  <div class="col"><div class="bar alt" style="height:100%"></div><div class="mo">Jun</div></div>
+                </div>
+                <div class="legend"><span><i style="background:var(--jade)"></i>Vendido</span><span><i style="background:var(--coral)"></i>En warehouse</span></div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+    <p style="text-align:center;color:var(--muted);font-size:12.5px;margin-top:18px">Mockup ilustrativo de la plataforma. Datos de ejemplo.</p>
+  </div>
+</section>
+
+<!-- TASAS -->
+<section id="tasas">
+  <div class="wrap">
+    <div class="shead"><div class="n">05</div><h2>Tasas y cobros</h2><p>Transparencia total: para la clínica, un descuento por transacción; para el paciente, inicial y cuotas claras.</p></div>
+    <div class="grid g2">
+      <div class="rate">
+        <div class="for">Para la clínica</div>
+        <div class="big">desde 8%<small> / transacción</small></div>
+        <p style="color:var(--muted);font-size:14.5px">Descuento de comercio sobre el monto del procedimiento, según volumen y tipo. Es todo lo que pagas.</p>
+        <ul><li><span class="d">✓</span> Sin cuota mensual ni costo de setup</li><li><span class="d">✓</span> Pago por adelantado y garantizado</li><li><span class="d">✓</span> Sin riesgo de crédito para la clínica</li><li><span class="d">✓</span> Panel de gestión y conciliación incluido</li></ul>
+      </div>
+      <div class="rate feat">
+        <div class="for">Para el paciente</div>
+        <div class="big">desde 30%<small> de inicial</small></div>
+        <p style="color:var(--muted);font-size:14.5px">El resto en 3 a 6 cuotas, indexadas al dólar. La inicial baja con buen historial.</p>
+        <div class="example"><div class="t">Ejemplo ilustrativo</div>
+          <div class="calc"><span>Procedimiento</span><b>$1.500</b></div>
+          <div class="calc"><span>Inicial (40%)</span><b>$600</b></div>
+          <div class="calc"><span>A financiar</span><b>$900</b></div>
+          <div class="calc tot"><span>6 cuotas de</span><b>~$165 / mes</b></div>
+        </div>
+      </div>
+    </div>
+    <p style="text-align:center;color:var(--muted);font-size:12.5px;margin-top:18px">Cifras ilustrativas y preliminares; las condiciones finales dependen del perfil, el procedimiento y el marco regulatorio aplicable.</p>
+  </div>
+</section>
+
+<!-- PROCEDIMIENTOS -->
+<section id="procedimientos" class="appsec">
+  <div class="wrap">
+    <div class="shead"><div class="n">06</div><h2>Procedimientos que financiamos</h2><p>Electivos y programados, de precio cerrado.</p></div>
+    <div class="grid g2">
+      <div class="proc"><div class="ic"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3c-2 0-3 1-4.5 1S5 3 4 4c-1.5 1.5-1 5 0 8s1.5 6 3 6 1.5-4 3-4 1.5 4 3 4 2-3 3-6 1.5-6.5 0-8C18 3 16 4 15 4S14 3 12 3z" stroke="#2B2F86" stroke-width="1.6" stroke-linejoin="round"/></svg></div><div><div class="nm">Odontología e implantología <span class="tagdot">Top</span></div><div class="rg">Implantes, ortodoncia, rehabilitación</div></div><div class="pr">$500–3.000</div></div>
+      <div class="proc"><div class="ic"><svg viewBox="0 0 24 24" fill="none"><path d="M12 21s-7-4.5-7-10a4 4 0 017-2.6A4 4 0 0119 11c0 5.5-7 10-7 10z" stroke="#2B2F86" stroke-width="1.6" stroke-linejoin="round"/></svg></div><div><div class="nm">Cirugía general electiva</div><div class="rg">Vesícula, hernias, laparoscopia</div></div><div class="pr">$450–1.500</div></div>
+      <div class="proc"><div class="ic"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="9" r="5" stroke="#2B2F86" stroke-width="1.6"/><path d="M12 14v7M9 18h6" stroke="#2B2F86" stroke-width="1.6" stroke-linecap="round"/></svg></div><div><div class="nm">Ginecología y parto programado</div><div class="rg">Cesárea, miomatosis, histerectomía</div></div><div class="pr">$800–3.000</div></div>
+      <div class="proc"><div class="ic"><svg viewBox="0 0 24 24" fill="none"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12z" stroke="#2B2F86" stroke-width="1.6"/><circle cx="12" cy="12" r="2.5" stroke="#2B2F86" stroke-width="1.6"/></svg></div><div><div class="nm">Oftalmología</div><div class="rg">Cataratas, lasik</div></div><div class="pr">$500–2.000</div></div>
+      <div class="proc"><div class="ic"><svg viewBox="0 0 24 24" fill="none"><path d="M8 4l3 3-4 4-3-3zM16 20l-3-3 4-4 3 3zM10 10l4 4" stroke="#2B2F86" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><div class="nm">Traumatología y ortopedia</div><div class="rg">Artroscopia, prótesis</div></div><div class="pr">$1.500–6.000</div></div>
+      <div class="proc"><div class="ic"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3l2.2 4.6L19 8.3l-3.5 3.4.8 4.9L12 14.3 7.7 16.6l.8-4.9L5 8.3l4.8-.7z" stroke="#2B2F86" stroke-width="1.6" stroke-linejoin="round"/></svg></div><div><div class="nm">Estética</div><div class="rg">Mamoplastia, lipoescultura</div></div><div class="pr">$2.000–4.000</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTOR -->
+<section id="sector">
+  <div class="wrap">
+    <div class="shead"><div class="n">07</div><h2>Sector y subsector al que va dirigido</h2><p>Sector de la <b>salud privada</b> venezolana, enfocados en el segmento que el seguro no cubre y el banco no atiende bien.</p></div>
+    <div class="grid g2">
+      <div class="sectorcard">
+        <div class="h"><div class="ic"><svg width="22" viewBox="0 0 24 24" fill="none"><path d="M19 21V8l-7-5-7 5v13h5v-6h4v6z" stroke="#2B2F86" stroke-width="1.6" stroke-linejoin="round"/></svg></div><h3>Subsector: la clínica</h3></div>
+        <ul><li>Centros privados <b>tipo B y C</b> con capacidad quirúrgica disponible</li><li>Procedimientos <b>electivos y programados</b>, de precio cerrado</li><li>Clínicas que hoy <b>pierden pacientes</b> por falta de financiamiento</li><li>Foco urbano: Caracas (Chacao, Baruta, Sucre, Libertador)</li></ul>
+      </div>
+      <div class="sectorcard">
+        <div class="h"><div class="ic"><svg width="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" stroke="#2B2F86" stroke-width="1.6"/><path d="M4 21c0-4 3.5-6 8-6s8 2 8 6" stroke="#2B2F86" stroke-width="1.6" stroke-linecap="round"/></svg></div><h3>El paciente objetivo</h3></div>
+        <ul><li>Clase media <b>dolarizada o con remesas</b>, ingreso ~$200–$800/mes</li><li><b>Sin seguro</b> o con HCM insuficiente</li><li>Puede sostener una cuota, no el monto de golpe</li><li>Asalariados, comerciantes y profesionales independientes</li></ul>
+      </div>
+    </div>
+    <div class="geoband"><svg width="22" viewBox="0 0 24 24" fill="none"><path d="M12 21s-7-4.5-7-10a7 7 0 0114 0c0 5.5-7 10-7 10z" stroke="#1E2160" stroke-width="1.6"/><circle cx="12" cy="11" r="2.5" stroke="#1E2160" stroke-width="1.6"/></svg><span><b>Cobertura:</b> Caracas como punto de entrada, con expansión a Valencia, Maracaibo y resto del país.</span></div>
+  </div>
+</section>
+
+<!-- FINAL -->
+<section id="final">
+  <div class="wrap"><div class="final">
+    <h2>Lleva financiamiento a tu clínica</h2>
+    <p>Aumenta tus procedimientos cerrados y cobra por adelantado. Te acompañamos en todo el proceso.</p>
+    <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap"><a href="#afiliacion" class="btn btn-j">Afilia tu clínica</a><a href="#afiliacion" class="btn btn-o">Hablar con el equipo</a></div>
+  </div></div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="row"><a href="#top" class="wordmark" style="font-size:26px">vita<span class="ac" style="color:var(--coral)">.</span></a><div style="font-size:14px;color:var(--muted)">Vive hoy, paga con calma.</div></div>
+    <div class="dis">Vita es una propuesta de plataforma de financiamiento de salud para Venezuela. Las tasas, cuotas y datos mostrados (incluyendo los mockups de app y backoffice) son ilustrativos y preliminares, sujetos a evaluación de perfil, tipo de procedimiento y al marco regulatorio aplicable. No constituye una oferta de crédito.</div>
+  </div>
+</footer>
+
+<script>
+  function tab(id,e){document.querySelectorAll('.pane').forEach(p=>p.classList.remove('on'));document.querySelectorAll('#ventajas .tabs button').forEach(b=>b.classList.remove('on'));document.getElementById(id).classList.add('on');e.currentTarget.classList.add('on');}
+  function dashTab(id,e){
+    document.querySelectorAll('.dpane').forEach(p=>p.style.display='none');
+    document.querySelectorAll('.dtabs button').forEach(b=>b.classList.remove('on'));
+    document.getElementById(id).style.display='block';
+    e.currentTarget.classList.add('on');
+    document.getElementById('dashTitle').textContent = id==='op' ? 'Operación · Cartera' : 'Clínica Santa Rosa';
+  }
+  /* In-page navigation that works inside sandboxed iframes (native #anchor scroll is often blocked) */
+  document.addEventListener('click', function(ev){
+    var a = ev.target.closest('a[href^="#"]');
+    if(!a) return;
+    ev.preventDefault();
+    var id = a.getAttribute('href').slice(1);
+    var el = id ? document.getElementById(id) : null;
+    if(el){ el.scrollIntoView({behavior:'smooth', block:'start'}); }
+    else { window.scrollTo({top:0, behavior:'smooth'}); }
+  });
+</script>
+</body>
+</html>
