@@ -10,12 +10,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Deploy to vitacapital.app
-        uses: easingthemes/ssh-deploy@main
+        uses: easingthemes/ssh-deploy@v6.0.3
         with:
           SSH_PRIVATE_KEY: ${{ secrets.DEPLOY_KEY }}
           REMOTE_HOST: ${{ secrets.DEPLOY_HOST }}
           REMOTE_USER: eliasmaneiro
           SOURCE: ./
           TARGET: /var/www/vitacapital.app
-          ARGS: -rlgoDzvc -i --delete
-          EXCLUDE: ".git/, .github/"
+          ARGS: -avz --delete
+          EXCLUDE: "/.git/, /.github/"
+          SCRIPT_BEFORE: |
+            mkdir -p /var/www/vitacapital.app
+            ls /var/www/vitacapital.app
