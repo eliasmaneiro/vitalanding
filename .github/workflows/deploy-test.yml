@@ -19,4 +19,4 @@ jobs:
           echo "$DEPLOY_KEY" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H "$DEPLOY_HOST" >> ~/.ssh/known_hosts 2>/dev/null
-          rsync -avz --delete --exclude='.git/' --exclude='.github/' ./ "eliasmaneiro@$DEPLOY_HOST:$TARGET"
+          rsync -avz --no-owner --no-group --delete --exclude='.git/' --exclude='.github/' ./ "eliasmaneiro@$DEPLOY_HOST:$TARGET"
