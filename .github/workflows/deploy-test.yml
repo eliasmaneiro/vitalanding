@@ -9,16 +9,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Deploy to test.vitacapital.app
-        uses: easingthemes/ssh-deploy@v6.0.3
-        with:
-          SSH_PRIVATE_KEY: ${{ secrets.DEPLOY_KEY }}
-          REMOTE_HOST: ${{ secrets.DEPLOY_HOST }}
-          REMOTE_USER: eliasmaneiro
-          SOURCE: ./
+      - name: rsync to test.vitacapital.app
+        env:
+          DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
           TARGET: /var/www/test.vitacapital.app
-          ARGS: -avz --delete
-          EXCLUDE: "/.git/, /.github/"
-          SCRIPT_BEFORE: |
-            mkdir -p /var/www/test.vitacapital.app
-            ls /var/www/test.vitacapital.app
+        run: |
+          mkdir -p ~/.ssh
+          echo "$DEPLOY_KEY" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H "$DEPLOY_HOST" >> ~/.ssh/known_hosts 2>/dev/null
+          rsync -avz --delete --exclude='.git/' --exclude='.github/' ./ "eliasmaneiro@$DEPLOY_HOST:$TARGET"
