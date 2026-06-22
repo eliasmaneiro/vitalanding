@@ -23,4 +23,4 @@ jobs:
           workload_identity_provider: ${{ secrets.GCP_WIF_PROVIDER }}
           service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
 
-      - run: gcloud storage rsync ./ ${{ env.BUCKET }} --recursive --delete-orphaned --exclude=".git*" --exclude=".github*"
+      - run: gcloud storage rsync ./ ${{ env.BUCKET }} --recursive --delete-unmatched-destination-objects --exclude=".git*" --exclude=".github*"
