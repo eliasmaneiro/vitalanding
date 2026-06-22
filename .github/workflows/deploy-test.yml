@@ -1,22 +1,26 @@
-name: Deploy to Test
+name: Deploy Landing to Test (CDN)
 
 on:
   push:
     branches: [test]
 
+env:
+  PROJECT_ID: personal-480817
+  BUCKET: gs://vitacapital-landing-test
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
     steps:
       - uses: actions/checkout@v4
-      - name: rsync to test.vitacapital.app
-        env:
-          DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
-          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
-          TARGET: /var/www/test.vitacapital.app
-        run: |
-          mkdir -p ~/.ssh
-          echo "$DEPLOY_KEY" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -H "$DEPLOY_HOST" >> ~/.ssh/known_hosts 2>/dev/null
-          rsync -avz --no-owner --no-group --delete --exclude='.git/' --exclude='.github/' ./ "eliasmaneiro@$DEPLOY_HOST:$TARGET"
+
+      - id: auth
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ secrets.GCP_WIF_PROVIDER }}
+          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+
+      - run: gcloud storage rsync ./ ${{ env.BUCKET }} --recursive --delete-orphaned --exclude=".git*" --exclude=".github*"
