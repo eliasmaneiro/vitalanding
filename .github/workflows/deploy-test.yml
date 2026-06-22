@@ -5,7 +5,7 @@ on:
     branches: [test]
 
 env:
-  PROJECT_ID: personal-480817
+  PROJECT_ID: luxxu-359713
   BUCKET: gs://vitacapital-landing-test
 
 jobs:
