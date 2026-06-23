@@ -24,3 +24,5 @@ jobs:
           service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
 
       - run: gcloud storage rsync ./ ${{ env.BUCKET }} --recursive --delete-unmatched-destination-objects --exclude=".git*" --exclude=".github*"
+
+      - run: gcloud compute url-maps invalidate-cdn-cache vitacapital-frontends --path "/*" --project=${{ env.PROJECT_ID }} --async
